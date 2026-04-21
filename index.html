@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chobe Holdings | Ultra-Luxury Safari</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@1,6..96,400..900&family=Inter:wght@200;400;600&display=swap" rel="stylesheet">
+    <style>
+        .serif-luxury { font-family: 'Bodoni Moda', serif; }
+        .nav-glass { background: rgba(10, 10, 10, 0.85); backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+        .silk-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .text-outline { -webkit-text-stroke: 1px #F5F5F0; color: transparent; }
+        
+        /* RESPONSIVE CLAMP TYPOGRAPHY */
+        .hero-title {
+            font-size: clamp(3.5rem, 12vw, 12rem); 
+            line-height: 0.85;
+        }
+
+        @keyframes subtleZoom {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.1); }
+        }
+        .animate-bg { animation: subtleZoom 20s infinite alternate ease-in-out; }
+
+        .btn-discovery {
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .btn-discovery:hover {
+            background: white;
+            color: black;
+            transform: translateY(-5px);
+        }
+    </style>
+</head>
+<body class="bg-[#0A0A0A] text-[#F5F5F0] font-['Inter'] antialiased overflow-x-hidden">
+
+    <nav class="fixed w-full z-[100] nav-glass px-6 lg:px-20 py-6 flex justify-between items-center">
+        <div class="text-xl lg:text-2xl font-light tracking-[0.3em] uppercase serif-luxury italic">
+            CHOBE <span class="text-amber-600">HOLDINGS</span>
+        </div>
+        <div class="hidden lg:flex items-center space-x-12 text-[10px] uppercase tracking-[0.4em] font-medium">
+            <a href="index.html" class="hover:text-amber-500 transition-colors text-stone-400">Home</a>
+            <a href="experience.html" class="hover:text-amber-500 transition-colors text-stone-400">Experience</a>
+            <a href="gallery.html" class="hover:text-amber-500 transition-colors text-stone-400">Gallery</a>
+            <a href="lodges.html" class="ml-6 px-10 py-3 bg-white text-black font-bold rounded-full hover:bg-amber-600 transition-all">Book Now</a>
+        </div>
+    </nav>
+
+
+    <main class="relative min-h-screen flex items-center px-6 lg:px-24 py-20 overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?auto=format&fit=crop&q=80&w=2500" 
+                 alt="Chobe Safari" 
+                 class="w-full h-full object-cover opacity-50 animate-bg">
+            <div class="absolute inset-0 bg-gradient-to-b from-black/70 via-transparent to-[#0A0A0A]"></div>
+        </div>
+
+        <div class="relative z-10 w-full grid lg:grid-cols-2 items-center gap-10 lg:gap-12">
+            <div class="text-left">
+                <span class="text-amber-500 text-[10px] lg:text-xs uppercase tracking-[0.5em] lg:tracking-[0.7em] font-semibold mb-4 lg:mb-6 block">Established 1984</span>
+                <h1 class="hero-title serif-luxury italic tracking-tighter mb-4">
+                    Pure <br> <span class="text-outline">Wilderness.</span>
+                </h1>
+            </div>
+
+            <div class="lg:justify-self-end w-full max-w-md">
+                <div class="silk-card p-8 lg:p-12 rounded-2xl lg:rounded-3xl shadow-2xl">
+                    <p class="text-stone-300 font-light leading-relaxed text-xs lg:text-sm mb-8 lg:mb-10">
+                        Chobe Holdings represents the soul of Botswana. From our pioneering silent electric boat cruises to exclusive private air charters, we redefine responsible travel.
+                    </p>
+                    <div class="flex items-center justify-between">
+                        <a href="lodges.html" class="group flex items-center space-x-4 text-[9px] lg:text-[10px] uppercase tracking-[0.3em] font-bold text-amber-500">
+                            <span>Explore Packages</span>
+                            <div class="w-6 h-[1px] bg-amber-500 group-hover:w-12 transition-all"></div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="absolute bottom-10 lg:bottom-20 left-1/2 -translate-x-1/2 z-20 w-full px-6 flex justify-center">
+            <a href="gallery.html" class="btn-discovery w-full max-w-[280px] text-center py-4 rounded-full text-[9px] lg:text-[10px] uppercase tracking-[0.4em] font-bold backdrop-blur-md">
+                View Safari Gallery
+            </a>
+        </div>
+    </main>
+
+    <footer class="bg-[#050505] py-20 px-6 lg:px-24 border-t border-white/5">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-12">
+            <div class="space-y-4">
+                <div class="text-xl font-light tracking-[0.3em] uppercase serif-luxury italic">
+                    CHOBE <span class="text-amber-600">HOLDINGS</span>
+                </div>
+                <p class="text-[10px] text-stone-500 max-w-xs leading-relaxed uppercase tracking-widest">
+                    Crafting immersive wilderness experiences across the heart of Botswana.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-16">
+                <div class="flex flex-col gap-4">
+                    <span class="text-amber-500 text-[9px] uppercase tracking-[0.4em] font-bold">Inquiry</span>
+                    <a href="contactus.html" class="text-[10px] uppercase tracking-widest text-stone-400 hover:text-white transition-colors">Contact Us</a>
+                    <a href="aboutus.html" class="text-[10px] uppercase tracking-widest text-stone-400 hover:text-white transition-colors">About Us</a>
+                </div>
+                <div class="flex flex-col gap-4">
+                    <span class="text-amber-500 text-[9px] uppercase tracking-[0.4em] font-bold">Social</span>
+                    <a href="#" class="text-[10px] uppercase tracking-widest text-stone-400 hover:text-white transition-colors">Instagram</a>
+                    <a href="#" class="text-[10px] uppercase tracking-widest text-stone-400 hover:text-white transition-colors">LinkedIn</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-20 pt-8 border-t border-white/5">
+            <p class="text-[8px] uppercase tracking-[0.2em] text-stone-700">&copy; 2026 Chobe Holdings. Multimedia Project Archive.</p>
+        </div>
+    </footer>
+</body>
+</html>

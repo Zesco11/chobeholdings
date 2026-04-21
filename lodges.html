@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en" class="overflow-x-hidden">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lodges | Chobe Holdings</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@1,6..96,400..900&family=Inter:wght@200;400;600&display=swap" rel="stylesheet">
+    <style>
+        .serif-luxury { font-family: 'Bodoni Moda', serif; }
+        .font-standard { font-family: 'Inter', sans-serif; }
+        
+        html { 
+            overflow-y: scroll; 
+            scrollbar-gutter: stable; 
+        }
+
+        body { 
+            background-color: #121212; 
+            color: #F5F5F0; 
+            margin: 0;
+            padding: 0;
+        }
+
+        #cart-modal {
+            position: fixed;
+            top: 0;
+            right: 0; 
+            height: 100vh;
+            width: 100%;
+            max-width: 450px;
+            background-color: #161614;
+            z-index: 100;
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            border-left: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+            will-change: transform;
+        }
+        
+        #cart-modal.open { transform: translateX(0); }
+
+        #modal-overlay {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 90;
+        }
+        #modal-overlay.open { opacity: 1; pointer-events: auto; }
+
+        .nav-glass { 
+            background: rgba(10, 10, 10, 0.95); 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1); 
+        }
+
+        .suite-card { 
+            background: rgba(255, 255, 255, 0.02); 
+            border: 1px solid rgba(255, 255, 255, 0.05); 
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+        
+        .suite-card:hover {
+            border-color: rgba(217, 119, 6, 0.3);
+            transform: translateY(-4px);
+        }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+
+        #success-modal {
+            background-color: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body class="font-standard antialiased">
+<nav class="fixed w-full z-[100] nav-glass px-6 lg:px-20 py-6 flex justify-between items-center">
+        <div class="text-xl lg:text-2xl font-light tracking-[0.3em] uppercase serif-luxury italic">
+            CHOBE <span class="text-amber-600">HOLDINGS</span>
+        </div>
+        <div class="hidden lg:flex items-center space-x-12 text-[10px] uppercase tracking-[0.4em] font-medium">
+            <a href="index.html" class="hover:text-amber-500 transition-colors text-stone-400">Home</a>
+            <a href="experience.html" class="hover:text-amber-500 transition-colors text-stone-400">Experience</a>
+            <a href="gallery.html" class="hover:text-amber-500 transition-colors text-stone-400">Gallery</a>
+            <a href="#" class="ml-6 px-10 py-3 bg-white text-black font-bold rounded-full hover:bg-amber-600 transition-all">Book Now</a>
+        </div>
+    </nav>
+
+
+    <div id="modal-overlay" onclick="toggleCart()"></div>
+
+    <div id="cart-modal">
+        <div class="p-8 flex flex-col h-full">
+            <div class="flex justify-between items-center mb-10">
+                <h3 class="serif-luxury italic text-3xl">Your Stay</h3>
+                <button onclick="toggleCart()" class="text-stone-500 hover:text-white">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+            </div>
+            
+            <div id="cart-items-list" class="flex-grow space-y-4 overflow-y-auto no-scrollbar">
+                <p class="text-stone-600 text-sm italic py-20 text-center" id="empty-msg">No suites selected.</p>
+            </div>
+
+            <div class="border-t border-white/5 pt-8 mt-4">
+                <div class="flex justify-between items-center mb-8">
+                    <span class="text-stone-500 uppercase tracking-widest text-[10px]">Total Amount</span>
+                    <span id="cart-total" class="text-amber-500 font-bold text-2xl">P0</span>
+                </div>
+                <button onclick="confirmReservation()" class="w-full py-5 bg-amber-600 text-white font-bold uppercase tracking-[0.3em] text-[11px] rounded-xl hover:bg-amber-700 transition-all">Confirm Reservation</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="success-modal" class="fixed inset-0 z-[110] flex items-center justify-center pointer-events-none opacity-0 transition-all duration-500">
+        <div class="bg-[#161614] border border-white/10 p-12 rounded-[3rem] max-w-sm w-full text-center shadow-2xl transform scale-90 transition-all duration-500" id="success-content">
+            <div class="w-20 h-20 border border-amber-600 rounded-full flex items-center justify-center mx-auto mb-8">
+                <svg class="w-10 h-10 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 13l4 4L19 7" />
+                </svg>
+            </div>
+            <h2 class="serif-luxury italic text-3xl mb-4 text-white">Request Received</h2>
+            <p class="text-stone-400 text-sm leading-relaxed mb-8 font-light">
+                Your selection has been sent to our concierge. A reservation specialist will contact you shortly to finalize your stay.
+            </p>
+            <div class="text-[10px] uppercase tracking-[0.3em] text-stone-500 mb-8 pb-8 border-b border-white/5">
+                Ref: #CH-<span id="res-id">0000</span>
+            </div>
+            <button onclick="closeSuccess()" class="text-amber-500 text-[10px] uppercase tracking-widest font-bold hover:text-white transition">Return to Collection</button>
+        </div>
+    </div>
+
+    <main class="pt-40 pb-24 px-6 lg:px-20">
+        <header class="mb-12 flex flex-col lg:flex-row lg:items-end justify-between gap-8">
+            <div>
+                <h1 class="serif-luxury italic text-5xl lg:text-7xl mb-4 tracking-tight">The Collection</h1>
+                <div class="flex space-x-10 border-b border-white/5 pb-2">
+                    <button onclick="filterSuites('all', this)" class="text-amber-500 font-bold text-[10px] uppercase tracking-widest pb-2 border-b-2 border-amber-500">All</button>
+                    <button onclick="filterSuites('under-6k', this)" class="text-stone-500 text-[10px] uppercase tracking-widest pb-2">Under P6,000</button>
+                    <button onclick="filterSuites('over-10k', this)" class="text-stone-500 text-[10px] uppercase tracking-widest pb-2">Exclusive</button>
+                </div>
+            </div>
+
+            <div onclick="toggleCart()" class="flex items-center space-x-4 cursor-pointer group bg-stone-900/50 px-8 py-4 rounded-2xl border border-white/5 hover:border-amber-600 transition-all">
+                <span class="text-[10px] uppercase tracking-widest font-bold text-stone-400 group-hover:text-amber-500">Your Stay</span>
+                <div class="relative">
+                    <svg class="h-5 w-5 text-stone-400 group-hover:text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
+                    <span id="cart-count" class="absolute -top-2 -right-2 bg-amber-600 text-white text-[8px] font-bold w-4 h-4 rounded-full flex items-center justify-center">0</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            <div class="suite-card p-6 rounded-[2.5rem] flex flex-col" data-category="under-6k">
+                <div class="relative overflow-hidden rounded-[2rem] aspect-[4/3] mb-6">
+                    <img src="luxury-thai-massage-pavilion.jpg " class="w-full h-full object-cover">
+                </div>
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="serif-luxury italic text-2xl">River Twin</h2>
+                    <span class="text-amber-500 font-bold">P5,200</span>
+                </div>
+                <button onclick="addToCart('River Twin', 5200)" class="w-full py-4 bg-white/5 border border-white/10 text-white text-[10px] uppercase font-bold rounded-2xl hover:bg-amber-600 transition-all">Select</button>
+            </div>
+
+            <div class="suite-card p-6 rounded-[2.5rem] flex flex-col" data-category="under-6k">
+                <div class="relative overflow-hidden rounded-[2rem] aspect-[4/3] mb-6">
+                    <img src="luxury-chill-bedroom-hotel.jpg" class="w-full h-full object-cover">
+                </div>
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="serif-luxury italic text-2xl">Safari King</h2>
+                    <span class="text-amber-500 font-bold">P5,800</span>
+                </div>
+                <button onclick="addToCart('Safari King', 5800)" class="w-full py-4 bg-white/5 border border-white/10 text-white text-[10px] uppercase font-bold rounded-2xl hover:bg-amber-600 transition-all">Select</button>
+            </div>
+
+            <div class="suite-card p-6 rounded-[2.5rem] flex flex-col" data-category="over-10k">
+                <div class="relative overflow-hidden rounded-[2rem] aspect-[4/3] mb-6">
+                    <img src="beautiful-view-bed-inside-vintage-wooden-van.jpg" class="w-full h-full object-cover">
+                </div>
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="serif-luxury italic text-2xl">Horizon Deck</h2>
+                    <span class="text-amber-500 font-bold">P12,500</span>
+                </div>
+                <button onclick="addToCart('Horizon Deck', 12500)" class="w-full py-4 bg-white/5 border border-white/10 text-white text-[10px] uppercase font-bold rounded-2xl hover:bg-amber-600 transition-all">Select</button>
+            </div>
+
+            <div class="suite-card p-6 rounded-[2.5rem] flex flex-col" data-category="over-10k">
+                <div class="relative overflow-hidden rounded-[2rem] aspect-[4/3] mb-6">
+                    <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?q=80&w=800" class="w-full h-full object-cover">
+                </div>
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="serif-luxury italic text-2xl">Chobe Master</h2>
+                    <span class="text-amber-500 font-bold">P18,000</span>
+                </div>
+                <button onclick="addToCart('Chobe Master', 18000)" class="w-full py-4 bg-white/5 border border-white/10 text-white text-[10px] uppercase font-bold rounded-2xl hover:bg-amber-600 transition-all">Select</button>
+            </div>
+
+            <div class="suite-card p-6 rounded-[2.5rem] flex flex-col" data-category="under-6k">
+                <div class="relative overflow-hidden rounded-[2rem] aspect-[4/3] mb-6">
+                    <img src="673450702.jpeg" class="w-full h-full object-cover">
+                </div>
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="serif-luxury italic text-2xl">Treetop Loft</h2>
+                    <span class="text-amber-500 font-bold">P4,900</span>
+                </div>
+                <button onclick="addToCart('Treetop Loft', 4900)" class="w-full py-4 bg-white/5 border border-white/10 text-white text-[10px] uppercase font-bold rounded-2xl hover:bg-amber-600 transition-all">Select</button>
+            </div>
+
+            <div class="suite-card p-6 rounded-[2.5rem] flex flex-col" data-category="over-10k">
+                <div class="relative overflow-hidden rounded-[2rem] aspect-[4/3] mb-6">
+                    <img src="https://images.unsplash.com/photo-1540518614846-7eded433c457?q=80&w=800" class="w-full h-full object-cover">
+                </div>
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="serif-luxury italic text-2xl">Sunset Villa</h2>
+                    <span class="text-amber-500 font-bold">P22,000</span>
+                </div>
+                <button onclick="addToCart('Sunset Villa', 22000)" class="w-full py-4 bg-white/5 border border-white/10 text-white text-[10px] uppercase font-bold rounded-2xl hover:bg-amber-600 transition-all">Select</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let totalVal = 0;
+        let count = 0;
+
+        function toggleCart() {
+            document.getElementById('cart-modal').classList.toggle('open');
+            document.getElementById('modal-overlay').classList.toggle('open');
+        }
+
+        function addToCart(name, price) {
+            count++;
+            totalVal += price;
+            const list = document.getElementById('cart-items-list');
+            document.getElementById('empty-msg').style.display = 'none';
+
+            const itemId = 'id-' + Math.random().toString(36).substr(2, 9);
+            const itemDiv = document.createElement('div');
+            itemDiv.id = itemId;
+            itemDiv.className = "flex justify-between items-center bg-white/5 p-5 rounded-2xl border border-white/5";
+            itemDiv.innerHTML = `
+                <div>
+                    <p class="text-sm font-semibold">${name}</p>
+                    <p class="text-amber-500 text-xs font-bold mt-1">P${price.toLocaleString()}</p>
+                </div>
+                <button onclick="removeFromCart('${itemId}', ${price})" class="text-stone-600 hover:text-red-500 font-bold text-[10px] p-2">( X )</button>
+            `;
+            list.appendChild(itemDiv);
+            updateUI();
+        }
+
+        function removeFromCart(id, price) {
+            const item = document.getElementById(id);
+            if (item) {
+                item.remove();
+                count--;
+                totalVal -= price;
+                updateUI();
+                if (count === 0) document.getElementById('empty-msg').style.display = 'block';
+            }
+        }
+
+        function updateUI() {
+            document.getElementById('cart-count').innerText = count;
+            document.getElementById('cart-total').innerText = `P${totalVal.toLocaleString()}`;
+        }
+
+        function filterSuites(cat, btn) {
+            document.querySelectorAll('.suite-card').forEach(c => {
+                c.style.display = (cat === 'all' || c.dataset.category === cat) ? 'flex' : 'none';
+            });
+            btn.parentElement.querySelectorAll('button').forEach(b => {
+                b.className = "text-stone-500 text-[10px] uppercase tracking-widest pb-2";
+            });
+            btn.className = "text-amber-500 font-bold text-[10px] uppercase pb-2 border-b-2 border-amber-500";
+        }
+
+        function confirmReservation() {
+            if (count === 0) return;
+            const ref = Math.floor(1000 + Math.random() * 9000);
+            document.getElementById('res-id').innerText = ref;
+            toggleCart();
+            setTimeout(() => {
+                const modal = document.getElementById('success-modal');
+                const content = document.getElementById('success-content');
+                modal.classList.remove('pointer-events-none');
+                modal.classList.add('opacity-100');
+                content.classList.add('scale-100');
+                clearCart();
+            }, 400);
+        }
+
+        function clearCart() {
+            count = 0;
+            totalVal = 0;
+            document.getElementById('cart-items-list').innerHTML = 
+                '<p class="text-stone-600 text-sm italic py-20 text-center" id="empty-msg">No suites selected.</p>';
+            updateUI();
+        }
+
+        function closeSuccess() {
+            const modal = document.getElementById('success-modal');
+            const content = document.getElementById('success-content');
+            modal.classList.add('pointer-events-none');
+            modal.classList.remove('opacity-100');
+            modal.classList.add('opacity-0');
+            content.classList.remove('scale-100');
+        }
+    </script>
+</body>
+</html>
